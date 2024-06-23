@@ -1,0 +1,20 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+</head>
+<body>
+    <h2>Profile</h2>
+    <p>Email: {{ user.email }}</p>
+    <p>Username: {{ user.username }}</p>
+    <p>First Name: {{ user.first_name }}</p>
+    <p>Last Name: {{ user.last_name }}</p>
+    <p><img src="{{ user.image.url }}" alt="Profile Picture"></p>
+    <a href="{% url 'profile-update' %}">Update Profile</a>
+    <form method="post" action="{% url 'profile-delete' %}">
+        {% csrf_token %}
+        <button type="submit">Delete Profile</button>
+    </form>
+</body>
+</html>

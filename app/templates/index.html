@@ -1,0 +1,340 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do App</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #3498db;
+      margin-bottom: 30px;
+    }
+
+    .input-group {
+      display: flex;
+      margin-bottom: 30px;
+    }
+
+    input[type="text"] {
+      flex-grow: 1;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .task-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .task-list {
+      flex-basis: 30%;
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .task-list h3 {
+      color: #3498db;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .task-list li {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      border-radius: 20px;
+      background-color: #f9f9f9;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .task-list li:hover {
+      background-color: #f4f4f4;
+    }
+
+    .task-list li.completed {
+      text-decoration: line-through;
+      color: #ccc;
+    }
+
+    .task-list li button {
+      margin-left: auto;
+      background-color: #e74c3c;
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+
+    .task-list li button:hover {
+      background-color: hsl(6, 63%, 46%);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .task-list li .progress-btn {
+      margin-left: 10px;
+      font-weight: 700;
+      font-size: 12px;
+      background-color: #f39c12;
+    }
+
+    .task-list li .progress-btn:hover {
+      background-color: #e67e22;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 10px;
+        padding: 15px;
+      }
+
+      .task-list {
+        flex-basis: 45%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .task-list {
+        flex-basis: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>To-Do App</h1>
+    <div class="input-group">
+      <input type="text" id="task-input" placeholder="Enter a task">
+      <button id="add-task">Add</button>
+    </div>
+    <div class="task-section">
+      <div class="task-list">
+        <h3>Pending</h3>
+        <ul id="pending-list"></ul>
+      </div>
+      <div class="task-list">
+        <h3>In Progress</h3>
+        <ul id="progress-list"></ul>
+      </div>
+      <div class="task-list">
+        <h3>Completed</h3>
+        <ul id="completed-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const taskInput = document.getElementById('task-input');
+    const addTaskButton = document.getElementById('add-task');
+    const pendingList = document.getElementById('pending-list');
+    const progressList = document.getElementById('progress-list');
+    const completedList = document.getElementById('completed-list');
+
+    function addTask() {
+      const taskText = taskInput.value.trim();
+      if (taskText !== '') {
+        const taskItem = document.createElement('li');
+        const taskLabel = document.createElement('span');
+        taskLabel.textContent = taskText;
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', () => {
+          removeTask(taskItem);
+        });
+        const progressButton = document.createElement('button');
+        progressButton.textContent = 'working';
+        progressButton.classList.add('progress-btn');
+        progressButton.addEventListener('click', () => {
+          markInProgress(taskItem);
+        });
+        taskItem.appendChild(taskLabel);
+        taskItem.appendChild(progressButton);
+        taskItem.appendChild(deleteButton);
+        pendingList.appendChild(taskItem);
+        taskInput.value = '';
+      }
+    }
+
+    function markCompleted(taskItem) {
+      taskItem.classList.add('completed');
+      const progressButton = taskItem.querySelector('.progress-btn');
+      progressButton.remove();
+      completedList.appendChild(taskItem);
+    }
+
+    function markInProgress(taskItem) {
+      taskItem.classList.remove('completed');
+      progressList.appendChild(taskItem);
+    }
+
+    function removeTask(taskItem) {
+      taskItem.remove();
+    }
+
+    addTaskButton.addEventListener('click', addTask);
+    taskInput.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+        addTask();
+      }
+    });
+
+    pendingList.addEventListener('click', (event) => {
+      if (event.target.classList.contains('completed')) {
+        markCompleted(event.target.parentElement);
+      }
+    });
+
+    progressList.addEventListener('click', (event) => {
+      if (event.target.classList.contains('completed')) {
+        markCompleted(event.target.parentElement);
+      } else if (event.target.classList.contains('progress-btn')) {
+        markCompleted(event.target.parentElement);
+      }
+    });
+  </script>
+</body>
+</html> -->
+
+<template>
+    <div>
+      <h1>Tasks</h1>
+  
+      <div v-if="tasks.length === 0">
+        <p>You don't have any tasks yet. Create a new task to get started.</p>
+      </div>
+  
+      <div v-else>
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Due Date</th>
+              <th>Status</th>
+              <th>Tags</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="task in tasks" :key="task.id">
+              <td>{{ task.title }}</td>
+              <td>{{ task.description }}</td>
+              <td>{{ task.due_date }}</td>
+              <td>{{ task.status }}</td>
+              <td>
+                <span v-for="tag in task.tags" :key="tag">{{ tag }}, </span>
+              </td>
+              <td>
+                <button @click="updateTask(task)">Edit</button>
+                <button @click="deleteTask(task.id)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <h2>Create a New Task</h2>
+      <form @submit.prevent="createTask">
+        <label for="title">Title:</label>
+        <input id="title" v-model="newTask.title" required>
+  
+        <label for="description">Description:</label>
+        <textarea id="description" v-model="newTask.description"></textarea>
+  
+        <label for="due_date">Due Date:</label>
+        <input id="due_date" type="date" v-model="newTask.due_date" required>
+  
+        <label for="status">Status:</label>
+        <select id="status" v-model="newTask.status" required>
+          <option v-for="status in statuses" :value="status.value">{{ status.label }}</option>
+        </select>
+  
+        <label for="tags">Tags:</label>
+        <input id="tags" v-model="newTask.tags" placeholder="Comma-separated tags">
+  
+        <button type="submit">Create Task</button>
+      </form>
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    data() {
+      return {
+        tasks: [],
+        newTask: {
+          title: '',
+          description: '',
+          due_date: '',
+          status: '',
+          tags: ''
+        },
+        statuses: [
+          { value: 'todo', label: 'To Do' },
+          { value: 'in_progress', label: 'In Progress' },
+          { value: 'completed', label: 'Completed' }
+        ]
+      }
+    },
+    mounted() {
+      this.fetchTasks()
+    },
+    methods: {
+      fetchTasks() {
+        // Fetch tasks from the backend using an API call
+      },
+      createTask() {
+        // Create a new task using an API call
+      },
+      updateTask(task) {
+        // Update an existing task using an API call
+      },
+      deleteTask(taskId) {
+        // Delete a task using an API call
+      }
+    }
+  }
+  </script>
